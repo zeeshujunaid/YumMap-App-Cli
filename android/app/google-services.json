@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1001298190569",
+    "project_id": "yummap-85c45",
+    "storage_bucket": "yummap-85c45.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001298190569:android:a69e58449f411b3db61078",
+        "android_client_info": {
+          "package_name": "com.yummap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPcl58dlQkh_Axmpoey8giJ5S8me-ILNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
