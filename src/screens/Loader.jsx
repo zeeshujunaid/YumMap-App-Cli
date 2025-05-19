@@ -63,7 +63,7 @@ export default function Loader({ navigation }) {
             paddingHorizontal: 10,
           }}
         >
-          Discover the best food around you!
+          A Food Descovery App!
         </Text>
 
         {/* Continue Button */}
