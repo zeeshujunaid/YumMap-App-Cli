@@ -50,7 +50,7 @@ export default function Loader({ navigation }) {
             textShadowRadius: 2,
           }}
         >
-          Welcome
+          Welcome To
         </Text>
 
         {/* Subtitle */}
