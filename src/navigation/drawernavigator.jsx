@@ -5,7 +5,7 @@ import HomeScreen from '../screens/Home';
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => (
-  <Drawer.Navigator screenOptions={{ headerShown: false }} initialRouteName="Home">
+  <Drawer.Navigator screenOptions={{ headerShown: true }} initialRouteName="Home">
     <Drawer.Screen name="Home" component={HomeScreen}/>
   </Drawer.Navigator>
 );

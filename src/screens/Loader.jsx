@@ -1,16 +1,15 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, Image, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, ImageBackground, Image } from 'react-native';
 
 export default function Loader({ navigation }) {
   const handleContinue = () => {
-    navigation.navigate('Home'); // Update if needed
+    navigation.navigate('MainApp');
   };
 
-  const { width, height } = Dimensions.get('window');
 
   return (
     <ImageBackground
-      source={{ uri: 'https://enatega.com/wp-content/uploads/2023/10/Asset-2-1536x717-1.webp' }}
+      source={require('../../assets/bgyummap.png')}
       resizeMode="cover"
       style={{ flex: 1 }}
     >
@@ -18,7 +17,7 @@ export default function Loader({ navigation }) {
       <View
         style={{
           position: 'absolute',
-          backgroundColor: 'rgba(0,0,0,0.4)',
+          backgroundColor: 'rgba(0,0,0,0.6)',
           width: '100%',
           height: '100%',
         }}
@@ -29,11 +28,9 @@ export default function Loader({ navigation }) {
         <Image
           source={require('../../assets/YumMap.png')}
           style={{
-            width: 160,
-            height: 160,
+            width: 250,
+            height: 240,
             marginBottom: 30,
-            borderRadius: 20,
-            backgroundColor: '#fff',
             padding: 10,
           }}
         />
@@ -41,7 +38,7 @@ export default function Loader({ navigation }) {
         {/* Title */}
         <Text
           style={{
-            fontSize: 36,
+            fontSize: 40,
             fontWeight: 'bold',
             color: '#f7bf56',
             marginBottom: 10,
@@ -56,7 +53,7 @@ export default function Loader({ navigation }) {
         {/* Subtitle */}
         <Text
           style={{
-            fontSize: 18,
+            fontSize: 20,
             color: '#ffffff',
             textAlign: 'center',
             marginBottom: 40,
@@ -65,26 +62,6 @@ export default function Loader({ navigation }) {
         >
           Discover the best food around you!
         </Text>
-
-        {/* Continue Button */}
-        <TouchableOpacity
-          onPress={handleContinue}
-          style={{
-            backgroundColor: '#f7bf56',
-            paddingVertical: 14,
-            paddingHorizontal: 50,
-            borderRadius: 30,
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: 3 },
-            shadowOpacity: 0.4,
-            shadowRadius: 4,
-            elevation: 6,
-          }}
-        >
-          <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#fff' }}>
-            Continue
-          </Text>
-        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
