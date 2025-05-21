@@ -47,7 +47,7 @@ export default function Loader({ navigation }) {
             textShadowRadius: 2,
           }}
         >
-          Welcome
+          Welcome To
         </Text>
 
         {/* Subtitle */}
@@ -60,7 +60,7 @@ export default function Loader({ navigation }) {
             paddingHorizontal: 10,
           }}
         >
-          Discover the best food around you!
+          A Food Descovery App!
         </Text>
       </View>
     </ImageBackground>
