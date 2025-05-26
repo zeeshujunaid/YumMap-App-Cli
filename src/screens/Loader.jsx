@@ -21,9 +21,7 @@ export default function Loader({ navigation }) {
     }).start();
   }, []);
 
-  const handleContinue = () => {
-    navigation.navigate('MainApp');
-  };
+  
 
   return (
     <ImageBackground
@@ -43,9 +41,9 @@ export default function Loader({ navigation }) {
         <Text style={styles.title}>Welcome To</Text>
         <Text style={styles.subtitle}>A Food Discovery App!</Text>
 
-        <TouchableOpacity style={styles.button} onPress={handleContinue}>
+        {/* <TouchableOpacity style={styles.button} onPress={handleContinue}>
           <Text style={styles.buttonText}>Continue</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </ImageBackground>
   );
@@ -86,16 +84,16 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     paddingHorizontal: 10,
   },
-  button: {
-    backgroundColor: '#f7bf56',
-    paddingVertical: 14,
-    paddingHorizontal: 40,
-    borderRadius: 30,
-    elevation: 5,
-  },
-  buttonText: {
-    color: '#000',
-    fontWeight: '600',
-    fontSize: 16,
-  },
+  // button: {
+  //   backgroundColor: '#f7bf56',
+  //   paddingVertical: 14,
+  //   paddingHorizontal: 40,
+  //   borderRadius: 30,
+  //   elevation: 5,
+  // },
+  // buttonText: {
+  //   color: '#000',
+  //   fontWeight: '600',
+  //   fontSize: 16,
+  // },
 });
