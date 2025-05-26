@@ -1,68 +1,101 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ImageBackground, Image } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  Image,
+  Animated,
+  StyleSheet,
+  StatusBar,
+} from 'react-native';
 
 export default function Loader({ navigation }) {
+  const logoScale = useRef(new Animated.Value(1.8)).current;
+
+  useEffect(() => {
+    Animated.spring(logoScale, {
+      toValue: 1,
+      friction: 3,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
   const handleContinue = () => {
     navigation.navigate('MainApp');
   };
 
-
   return (
     <ImageBackground
-      source={require('../../assets/bgyummap.png')}
+      source={require('../../assets/yummapbg2.png')}
       resizeMode="cover"
-      style={{ flex: 1 }}
+      style={styles.background}
     >
-      {/* Overlay for better readability */}
-      <View
-        style={{
-          position: 'absolute',
-          backgroundColor: 'rgba(0,0,0,0.6)',
-          width: '100%',
-          height: '100%',
-        }}
-      />
+      <StatusBar hidden={true} />
+      <View style={styles.overlay} />
 
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-        {/* App Logo */}
-        <Image
+      <View style={styles.container}>
+        <Animated.Image
           source={require('../../assets/YumMap.png')}
-          style={{
-            width: 250,
-            height: 240,
-            marginBottom: 30,
-            padding: 10,
-          }}
+          style={[styles.logo, { transform: [{ scale: logoScale }] }]}
         />
 
-        {/* Title */}
-        <Text
-          style={{
-            fontSize: 40,
-            fontWeight: 'bold',
-            color: '#f7bf56',
-            marginBottom: 10,
-            textShadowColor: 'rgba(0, 0, 0, 0.5)',
-            textShadowOffset: { width: 1, height: 1 },
-            textShadowRadius: 2,
-          }}
-        >
-          Welcome To
-        </Text>
+        <Text style={styles.title}>Welcome To</Text>
+        <Text style={styles.subtitle}>A Food Discovery App!</Text>
 
-        {/* Subtitle */}
-        <Text
-          style={{
-            fontSize: 20,
-            color: '#ffffff',
-            textAlign: 'center',
-            marginBottom: 40,
-            paddingHorizontal: 10,
-          }}
-        >
-          A Food Descovery App!
-        </Text>
+        <TouchableOpacity style={styles.button} onPress={handleContinue}>
+          <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
 }
+
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  logo: {
+    width: 250,
+    height: 240,
+    marginBottom: 30,
+  },
+  title: {
+    fontSize: 44,
+    fontWeight: 'bold',
+    color: '#fae7c1',
+    marginBottom: 10,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
+  },
+  subtitle: {
+    fontSize: 18,
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 40,
+    paddingHorizontal: 10,
+  },
+  button: {
+    backgroundColor: '#f7bf56',
+    paddingVertical: 14,
+    paddingHorizontal: 40,
+    borderRadius: 30,
+    elevation: 5,
+  },
+  buttonText: {
+    color: '#000',
+    fontWeight: '600',
+    fontSize: 16,
+  },
+});
