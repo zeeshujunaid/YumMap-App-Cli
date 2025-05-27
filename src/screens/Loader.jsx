@@ -21,7 +21,13 @@ export default function Loader({ navigation }) {
     }).start();
   }, []);
 
-  
+
+  useEffect(() => {
+  setTimeout(() => {
+    navigation.replace('Login');
+  }, 4000);
+}, [navigation]);
+
 
   return (
     <ImageBackground
