@@ -9,6 +9,7 @@ export default function LoginScreen({ navigation }) {
                 title="Go to Signup"
                 onPress={() => navigation.navigate('Signup')}
             />
+{/*             login page needed for user and res both */}
         </View>
     );
 }
