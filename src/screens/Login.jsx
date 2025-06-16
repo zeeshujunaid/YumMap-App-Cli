@@ -16,6 +16,7 @@ import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export default function Login({navigation}) {
+  // Configure Google Sign-In
   useEffect(() => {
     GoogleSignin.configure({
       webClientId:
@@ -23,14 +24,35 @@ export default function Login({navigation}) {
     });
   }, []);
 
+  // Function to handle Google Sign-In
   const handleGoogleLogin = async () => {
     try {
+      // Step 1: Sign in with Google
       const {idToken} = await GoogleSignin.signIn();
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+      // Step 2: Decode the idToken to get the user's email
+      const {email} = await GoogleSignin.getCurrentUser().user;
+
+      // Step 3: Check if the user already exists
+      const signInMethods = await auth().fetchSignInMethodsForEmail(email);
+
+      if (signInMethods.length === 0) {
+        // User does not exist, show alert
+        Alert.alert(
+          'Account Not Found',
+          'Please sign up first using Google Sign-Up.',
+        );
+        await GoogleSignin.signOut(); // optional: sign out from Google
+        return;
+      }
+
+      // Step 4: Sign in if user exists
       const userCredential = await auth().signInWithCredential(
         googleCredential,
       );
       const user = userCredential.user;
+
       Alert.alert('Success', `Welcome back, ${user.email}!`);
       navigation.navigate('MainApp');
     } catch (error) {
@@ -40,6 +62,7 @@ export default function Login({navigation}) {
   };
 
   return (
+    // Keyboard Avoiding View to handle keyboard appearance
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
@@ -90,6 +113,7 @@ export default function Login({navigation}) {
 
             {/* Input Fields */}
             <View style={{gap: 15}}>
+              {/* Email Input */}
               <Text style={{fontSize: 16, color: '#000'}}>Email</Text>
               <TextInput
                 placeholder="Enter your email"
@@ -102,7 +126,7 @@ export default function Login({navigation}) {
                   fontSize: 16,
                 }}
               />
-
+              {/* {pasword input} */}
               <Text style={{fontSize: 16, color: '#000', marginTop: 15}}>
                 Password
               </Text>
@@ -118,13 +142,16 @@ export default function Login({navigation}) {
                 }}
               />
             </View>
-                <TouchableOpacity style={{marginTop: 20 , marginLeft: 220}} onPress={() => navigation.navigate('ForgotPassword')}>
-                  <Text style={{color: '#FF4D4D', textAlign: 'center'}}>
-                    Forgot Password?
-                  </Text>
-                </TouchableOpacity>
+            {/* Forgot Password Link */}
+            <TouchableOpacity
+              style={{marginTop: 20, marginLeft: 220}}
+              onPress={() => navigation.navigate('ForgotPassword')}>
+              <Text style={{color: '#FF4D4D', textAlign: 'center'}}>
+                Forgot Password?
+              </Text>
+            </TouchableOpacity>
 
-            {/* Login Button */}
+            {/* signup Button */}
             <TouchableOpacity
               style={{
                 backgroundColor: '#FF4D4D',
@@ -133,7 +160,7 @@ export default function Login({navigation}) {
                 marginTop: 30,
               }}
               onPress={() => {
-                // Add email/password login here
+                navigation.navigate('Signup');
               }}>
               <Text
                 style={{
@@ -160,12 +187,10 @@ export default function Login({navigation}) {
                 marginTop: 20,
               }}>
               <Image
-                source={require('../../assets/signinwithgoogle.png')} // Add this image to your assets folder
+                source={require('../../assets/signinwithgoogle.png')}
                 style={{width: 250, height: 50}}
               />
             </TouchableOpacity>
-
-            {/* Forgot Password */}
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
