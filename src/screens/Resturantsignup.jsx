@@ -10,13 +10,47 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
+  Alert,
   ScrollView,
 } from 'react-native';
 import {useState} from 'react';
 import RestaurantTimingModal from '../components/Timeselecter';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export default function Resturantsignup() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImagePick = () => {
+    Alert.alert(
+      'Upload Image',
+      'Choose an option',
+      [
+        {
+          text: 'Camera',
+          onPress: () => {
+            launchCamera({mediaType: 'photo', quality: 0.7}, res => {
+              if (!res.didCancel && !res.errorCode) {
+                setSelectedImage(res.assets[0].uri);
+              }
+            });
+          },
+        },
+        {
+          text: 'Gallery',
+          onPress: () => {
+            launchImageLibrary({mediaType: 'photo', quality: 0.7}, res => {
+              if (!res.didCancel && !res.errorCode) {
+                setSelectedImage(res.assets[0].uri);
+              }
+            });
+          },
+        },
+        {text: 'Cancel', style: 'cancel'},
+      ],
+      {cancelable: true},
+    );
+  };
 
   return (
     // {/* Keyboard Avoiding View to handle keyboard appearance */}
@@ -34,12 +68,13 @@ export default function Resturantsignup() {
             }}>
             {/* Logo Section */}
 
-            <View
-              style={{
-                overflow: 'hidden',
-              }}>
+            <View style={{overflow: 'hidden'}}>
               <Image
-                source={require('../../assets/resturantbg.jpg')}
+                source={
+                  selectedImage
+                    ? {uri: selectedImage}
+                    : require('../../assets/resturantbg.jpg')
+                }
                 resizeMode="cover"
                 style={{
                   height: 250,
@@ -47,6 +82,7 @@ export default function Resturantsignup() {
                 }}
               />
             </View>
+
             {/* Logo Section ends here*/}
 
             {/* text with overlay */}
@@ -78,7 +114,8 @@ export default function Resturantsignup() {
 
             {/* image picker overlay */}
 
-            <View
+            <TouchableOpacity
+              onPress={handleImagePick}
               style={{
                 backgroundColor: '#fff',
                 padding: 20,
@@ -95,7 +132,7 @@ export default function Resturantsignup() {
                 source={require('../../assets/cameraicon.png')}
                 style={{height: 40, width: 40}}
               />
-            </View>
+            </TouchableOpacity>
 
             {/* image picker overlay ends here*/}
 
@@ -253,14 +290,12 @@ export default function Resturantsignup() {
               </View>
 
               <RestaurantTimingModal
-              visible={modalVisible}
-              onClose={() => setModalVisible(false)}
+                visible={modalVisible}
+                onClose={() => setModalVisible(false)}
               />
 
               {/*input fields ends here */}
             </View>
-
-
 
             {/* Keyboard Avoiding View to handle keyboard appearance ends  here*/}
           </View>
