@@ -62,11 +62,11 @@ export default function Login({navigation}) {
             <View style={{alignItems: 'center', marginBottom: 30}}>
               <Image
                 source={require('../../assets/YumMap.png')}
-                style={{height: 60, width: 60, marginBottom: 10}}
+                style={{height: 90, width: 80}}
               />
-              <Text style={{fontSize: 24, fontWeight: 'bold', color: '#000'}}>
+              {/* <Text style={{fontSize: 24, fontWeight: 'bold', color: '#000'}}>
                 YumMap
-              </Text>
+              </Text> */}
             </View>
 
             {/* Welcome Section */}
@@ -147,7 +147,7 @@ export default function Login({navigation}) {
               }}>
               <TouchableOpacity
                 style={{marginTop: 20}}
-                onPress={() => navigation.navigate('Login')}>
+                onPress={() => navigation.navigate('RestaurantSignup')}>
                 <Text
                   style={{color: '#FF4D4D', textAlign: 'center', fontSize: 12}}>
                   Signup as a Restaurant?
@@ -179,7 +179,7 @@ export default function Login({navigation}) {
                   fontSize: 18,
                   fontWeight: 'bold',
                 }}>
-                Login
+                Sign Up
               </Text>
             </TouchableOpacity>
 
@@ -194,11 +194,11 @@ export default function Login({navigation}) {
                 borderWidth: 1,
                 borderColor: '#ccc',
                 borderRadius: 10,
-                marginTop: 20,
+                marginTop: 15,
               }}>
               <Image
                 source={require('../../assets/signupwithgoogle.png')}
-                style={{width: 250, height: 50}}
+                style={{width: 250, height: 25}}
               />
             </TouchableOpacity>
           </View>

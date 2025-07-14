@@ -82,11 +82,11 @@ export default function Login({navigation}) {
             <View style={{alignItems: 'center', marginBottom: 30}}>
               <Image
                 source={require('../../assets/YumMap.png')}
-                style={{height: 60, width: 60, marginBottom: 10}}
+                style={{height: 90, width: 80}}
               />
-              <Text style={{fontSize: 24, fontWeight: 'bold', color: '#000'}}>
+              {/* <Text style={{fontSize: 24, fontWeight: 'bold', color: '#000'}}>
                 YumMap
-              </Text>
+              </Text> */}
             </View>
 
             {/* Welcome Section */}
@@ -188,7 +188,7 @@ export default function Login({navigation}) {
               }}>
               <Image
                 source={require('../../assets/signinwithgoogle.png')}
-                style={{width: 250, height: 50}}
+                style={{width: 250, height: 20}}
               />
             </TouchableOpacity>
           </View>
