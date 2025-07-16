@@ -166,6 +166,7 @@ export default function Login({navigation}) {
 
             {/* Login Button */}
             <TouchableOpacity
+            onPress={()=>{navigation.navigate('Profilesignup')}}
               style={{
                 backgroundColor: '#FF4D4D',
                 paddingVertical: 14,

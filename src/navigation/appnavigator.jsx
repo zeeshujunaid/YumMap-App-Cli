@@ -5,6 +5,7 @@ import LoginScreen from '../screens/Login';
 import SignupScreen from '../screens/Signup';
 import DrawerNavigator from './drawernavigator';
 import Loader from '../screens/Loader';
+import Profilesignup from '../screens/Profilesignup'; 
 import Resturantsignup from '../screens/Resturantsignup';
 // import { AuthContext } from '../context/Authcontext';
 
@@ -14,11 +15,12 @@ const AppNavigator = () => {
 //   const { user } = useContext(AuthContext);
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='RestaurantSignup'>
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Profilesignup'>
         <Stack.Screen name="Loader" component={Loader} />
           <Stack.Screen name="MainApp" component={DrawerNavigator} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Signup" component={SignupScreen} />
+          <Stack.Screen name="Profilesignup" component={Profilesignup} />
           <Stack.Screen name="RestaurantSignup" component={Resturantsignup} />
     </Stack.Navigator>
   );

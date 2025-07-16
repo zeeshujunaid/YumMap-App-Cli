@@ -1,0 +1,205 @@
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+  Alert,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+} from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
+export default function Profilesignup({navigation}) {
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleImagePick = () => {
+    Alert.alert(
+      'Upload Image',
+      'Choose an option',
+      [
+        {
+          text: 'Camera',
+          onPress: () => {
+            launchCamera({mediaType: 'photo', quality: 0.7}, res => {
+              if (!res.didCancel && !res.errorCode) {
+                setSelectedImage(res.assets[0].uri);
+              }
+            });
+          },
+        },
+        {
+          text: 'Gallery',
+          onPress: () => {
+            launchImageLibrary({mediaType: 'photo', quality: 0.7}, res => {
+              if (!res.didCancel && !res.errorCode) {
+                setSelectedImage(res.assets[0].uri);
+              }
+            });
+          },
+        },
+        {text: 'Cancel', style: 'cancel'},
+      ],
+      {cancelable: true},
+    );
+  };
+
+  return (
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{flex: 1}}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps="handled">
+          <View style={{flex: 1, backgroundColor: '#fff'}}>
+            {/* Header Background Image */}
+            <View style={{overflow: 'hidden'}}>
+              <Image
+                source={
+                     require('../../assets/YUMMAPICON.png')
+                }
+                resizeMode="cover"
+                style={{
+                  height: 200,
+                  width: '100%',
+                }}
+              />
+            </View>
+
+            {/* Overlay Text Box */}
+            <View
+              style={{
+                backgroundColor: 'rgba(245, 241, 241, 0.5)',
+                padding: 20,
+                borderRadius: 10,
+                width: '90%',
+                height: 70,
+                justifyContent: 'center',
+                alignSelf: 'center',
+                position: 'absolute',
+                top: 20,
+                left: 20,
+                right: 20,
+              }}>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  textAlign: 'center',
+                }}>
+                Plz Make Your Profile
+              </Text>
+            </View>
+
+
+            {/* Profile Image Centered */}
+            <View
+              style={{
+                backgroundColor: '#fff',
+                borderTopLeftRadius: 50,
+                borderTopRightRadius: 50,
+                marginTop: -40,
+                alignItems: 'center',
+              }}>
+              <View style={{marginTop: -55}}>
+                <Image
+                  source={
+                    selectedImage
+                      ? {uri: selectedImage}
+                      : require('../../assets/resturantbg.jpg')
+                  }
+                  style={{
+                    height: 150,
+                    width: 150,
+                    borderRadius: 75,
+                    borderColor: '#000',
+                    borderWidth: 1,
+                  }}
+                />
+              </View>
+
+
+              {/* Image Picker Button */}
+            <TouchableOpacity
+              onPress={handleImagePick}
+              style={{
+                backgroundColor: '#fff',
+                height: 40,
+                width: 40,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: 20,
+                position: 'absolute',
+                top: 55,
+                right: 120,
+              }}>
+              <Image
+                source={require('../../assets/cameraicon.png')}
+                style={{height: 40, width: 40}}
+              />
+            </TouchableOpacity>
+
+
+
+
+              {/* Input Fields */}
+              <View style={{paddingVertical: 20, paddingHorizontal: 20, width: '100%'}}>
+                <Text style={{fontSize: 16, color: '#000', marginTop: 20}}>Full Name</Text>
+                <TextInput
+                  placeholder="John"
+                  keyboardType="default"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    borderRadius: 10,
+                    padding: 12,
+                    fontSize: 16,
+                    width: '100%',
+                    marginTop: 10,
+                  }}
+                />
+
+                <Text style={{fontSize: 16, color: '#000', marginTop: 20}}>Enter Your Phone Number</Text>
+                <TextInput
+                  placeholder="+1234567890"
+                  keyboardType="phone-pad"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#ccc',
+                    borderRadius: 10,
+                    padding: 12,
+                    fontSize: 16,
+                    width: '100%',
+                    marginTop: 10,
+                  }}
+                />
+              </View>
+
+              {/* Next Button */}
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: '#000',
+                  borderWidth: 1,
+                  borderRadius: 10,
+                  marginHorizontal: 20,
+                  marginBottom: 20,
+                  paddingVertical: 10,
+                  paddingHorizontal: 30,
+                }}>
+                <TouchableOpacity onPress={() => navigation.navigate('MainApp')}>
+                  <Text style={{fontSize: 16, fontWeight: 'bold'}}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
+  );
+}
