@@ -12,12 +12,13 @@ import {
   TextInput,
   Alert,
   ScrollView,
+  Button,
 } from 'react-native';
 import {useState} from 'react';
 import RestaurantTimingModal from '../components/Timeselecter';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-export default function Resturantsignup() {
+export default function Resturantsignup({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -295,6 +296,24 @@ export default function Resturantsignup() {
               />
 
               {/*input fields ends here */}
+            </View>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderColor: '#000',
+                borderWidth: 1,
+                borderRadius: 10,
+                marginHorizontal: 20,
+                marginBottom: 20,
+              }}>
+              <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
+              onPress={() => {
+                navigation.navigate('MainApp');
+              }}>
+                <Text>next</Text>
+              </TouchableOpacity>
             </View>
 
             {/* Keyboard Avoiding View to handle keyboard appearance ends  here*/}
