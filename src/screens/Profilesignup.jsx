@@ -69,32 +69,6 @@ export default function Profilesignup({navigation}) {
               />
             </View>
 
-            {/* Overlay Text Box */}
-            <View
-              style={{
-                backgroundColor: 'rgba(245, 241, 241, 0.5)',
-                padding: 20,
-                borderRadius: 10,
-                width: '90%',
-                height: 70,
-                justifyContent: 'center',
-                alignSelf: 'center',
-                position: 'absolute',
-                top: 20,
-                left: 20,
-                right: 20,
-              }}>
-              <Text
-                style={{
-                  color: '#000',
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}>
-                Plz Make Your Profile
-              </Text>
-            </View>
-
 
             {/* Profile Image Centered */}
             <View
@@ -121,6 +95,12 @@ export default function Profilesignup({navigation}) {
                   }}
                 />
               </View>
+
+            <View style={{marginTop: 40}}>
+                <Text style={{fontSize: 12, color: '#666', textAlign: 'center'}}>
+                  Please fill in your details
+                </Text>
+            </View>
 
 
               {/* Image Picker Button */}

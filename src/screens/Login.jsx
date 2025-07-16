@@ -173,6 +173,22 @@ export default function Login({navigation}) {
               </Text>
             </TouchableOpacity>
 
+            <View
+              style={{marginVertical: 20, alignItems: 'center', marginTop: 40}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: '80%',
+                }}>
+                <View style={{flex: 1, height: 1, backgroundColor: '#ccc'}} />
+                <Text style={{marginHorizontal: 10, color: '#888'}}>
+                  or signin with
+                </Text>
+                <View style={{flex: 1, height: 1, backgroundColor: '#ccc'}} />
+              </View>
+            </View>
+
             {/* Google Sign-In Button */}
             <TouchableOpacity
               onPress={handleGoogleLogin}

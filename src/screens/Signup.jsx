@@ -59,14 +59,11 @@ export default function Login({navigation}) {
               paddingVertical: 40,
             }}>
             {/* Logo Section */}
-            <View style={{alignItems: 'center', marginBottom: 30}}>
+            <View style={{alignItems: 'center', marginBottom: 10}}>
               <Image
                 source={require('../../assets/YumMap.png')}
                 style={{height: 90, width: 80}}
               />
-              {/* <Text style={{fontSize: 24, fontWeight: 'bold', color: '#000'}}>
-                YumMap
-              </Text> */}
             </View>
 
             {/* Welcome Section */}
@@ -93,20 +90,6 @@ export default function Login({navigation}) {
 
             {/* Input Fields */}
             <View style={{gap: 15}}>
-              {/* {name input} */}
-              <Text style={{fontSize: 16, color: '#000'}}>Name</Text>
-              <TextInput
-                placeholder="Enter your Name"
-                keyboardType="name"
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#ccc',
-                  borderRadius: 10,
-                  padding: 12,
-                  fontSize: 16,
-                }}
-              />
-
               {/* {email input} */}
               <Text style={{fontSize: 16, color: '#000'}}>Email</Text>
               <TextInput
@@ -166,7 +149,9 @@ export default function Login({navigation}) {
 
             {/* Login Button */}
             <TouchableOpacity
-            onPress={()=>{navigation.navigate('Profilesignup')}}
+              onPress={() => {
+                navigation.navigate('Profilesignup');
+              }}
               style={{
                 backgroundColor: '#FF4D4D',
                 paddingVertical: 14,
@@ -183,6 +168,22 @@ export default function Login({navigation}) {
                 Sign Up
               </Text>
             </TouchableOpacity>
+
+            <View
+              style={{marginVertical: 20, alignItems: 'center', marginTop: 40}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: '80%',
+                }}>
+                <View style={{flex: 1, height: 1, backgroundColor: '#ccc'}} />
+                <Text style={{marginHorizontal: 10, color: '#888'}}>
+                  or signin with
+                </Text>
+                <View style={{flex: 1, height: 1, backgroundColor: '#ccc'}} />
+              </View>
+            </View>
 
             {/* Google Sign-In Button */}
             <TouchableOpacity
