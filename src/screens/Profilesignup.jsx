@@ -53,14 +53,14 @@ export default function Profilesignup({navigation}) {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{flex: 1}}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <ScrollView contentContainerStyle={{flexGrow: 1}} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          contentContainerStyle={{flexGrow: 1}}
+          keyboardShouldPersistTaps="handled">
           <View style={{flex: 1, backgroundColor: '#fff'}}>
             {/* Header Background Image */}
             <View style={{overflow: 'hidden'}}>
               <Image
-                source={
-                     require('../../assets/YUMMAPICON.png')
-                }
+                source={require('../../assets/resbg.png')}
                 resizeMode="cover"
                 style={{
                   height: 200,
@@ -68,7 +68,6 @@ export default function Profilesignup({navigation}) {
                 }}
               />
             </View>
-
 
             {/* Profile Image Centered */}
             <View
@@ -90,45 +89,49 @@ export default function Profilesignup({navigation}) {
                     height: 150,
                     width: 150,
                     borderRadius: 75,
-                    borderColor: '#000',
-                    borderWidth: 1,
+                    borderColor: '#FF4D4D',
+                    borderWidth: 2,
                   }}
                 />
               </View>
 
-            <View style={{marginTop: 40}}>
-                <Text style={{fontSize: 12, color: '#666', textAlign: 'center'}}>
+              <View style={{marginTop: 40}}>
+                <Text
+                  style={{fontSize: 12, color: '#666', textAlign: 'center'}}>
                   Please fill in your details
                 </Text>
-            </View>
-
+              </View>
 
               {/* Image Picker Button */}
-            <TouchableOpacity
-              onPress={handleImagePick}
-              style={{
-                backgroundColor: '#fff',
-                height: 40,
-                width: 40,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderRadius: 20,
-                position: 'absolute',
-                top: 55,
-                right: 120,
-              }}>
-              <Image
-                source={require('../../assets/cameraicon.png')}
-                style={{height: 40, width: 40}}
-              />
-            </TouchableOpacity>
-
-
-
+              <TouchableOpacity
+                onPress={handleImagePick}
+                style={{
+                  backgroundColor: '#fff',
+                  height: 40,
+                  width: 40,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 20,
+                  position: 'absolute',
+                  top: 55,
+                  right: 120,
+                }}>
+                <Image
+                  source={require('../../assets/cameraicon.png')}
+                  style={{height: 40, width: 40}}
+                />
+              </TouchableOpacity>
 
               {/* Input Fields */}
-              <View style={{paddingVertical: 20, paddingHorizontal: 20, width: '100%'}}>
-                <Text style={{fontSize: 16, color: '#000', marginTop: 20}}>Full Name</Text>
+              <View
+                style={{
+                  paddingVertical: 20,
+                  paddingHorizontal: 20,
+                  width: '100%',
+                }}>
+                <Text style={{fontSize: 16, color: '#000', marginTop: 20}}>
+                  Full Name
+                </Text>
                 <TextInput
                   placeholder="John"
                   keyboardType="default"
@@ -143,7 +146,9 @@ export default function Profilesignup({navigation}) {
                   }}
                 />
 
-                <Text style={{fontSize: 16, color: '#000', marginTop: 20}}>Enter Your Phone Number</Text>
+                <Text style={{fontSize: 16, color: '#000', marginTop: 20}}>
+                  Enter Your Phone Number
+                </Text>
                 <TextInput
                   placeholder="+1234567890"
                   keyboardType="phone-pad"
@@ -160,20 +165,25 @@ export default function Profilesignup({navigation}) {
               </View>
 
               {/* Next Button */}
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderColor: '#000',
-                  borderWidth: 1,
-                  borderRadius: 10,
-                  marginHorizontal: 20,
-                  marginBottom: 20,
-                  paddingVertical: 10,
-                  paddingHorizontal: 30,
-                }}>
-                <TouchableOpacity onPress={() => navigation.navigate('MainApp')}>
-                  <Text style={{fontSize: 16, fontWeight: 'bold'}}>Next</Text>
+              <View style={{width: '100%', paddingHorizontal: 20,marginTop: 20}}>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate('MainApp')}
+                  activeOpacity={0.8}
+                  style={{
+                    backgroundColor: '#FF4D4D',
+                    borderRadius: 12,
+                    paddingVertical: 15,
+                    alignItems: 'center',
+                    shadowColor: '#000',
+                    shadowOffset: {width: 0, height: 2},
+                    shadowOpacity: 0.2,
+                    shadowRadius: 3,
+                    elevation: 4,
+                  }}>
+                  <Text
+                    style={{color: '#fff', fontSize: 18, fontWeight: 'bold'}}>
+                    Next
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>

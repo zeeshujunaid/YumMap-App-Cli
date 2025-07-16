@@ -151,7 +151,7 @@ export default function Resturantsignup({navigation}) {
                   fontWeight: 'bold',
                   textAlign: 'center',
                   marginTop: 24,
-                  color: '#000',
+                  color: '#FF4D4D',
                 }}>
                 Restaurant Signup
               </Text>
@@ -297,24 +297,26 @@ export default function Resturantsignup({navigation}) {
 
               {/*input fields ends here */}
             </View>
-            <View
+            <TouchableOpacity
+              onPress={() => navigation.navigate('MainApp')}
               style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                borderColor: '#000',
-                borderWidth: 1,
-                borderRadius: 10,
+                marginTop: 30,
                 marginHorizontal: 20,
-                marginBottom: 20,
+                marginBottom: 30,
+                backgroundColor: '#FF4D4D',
+                borderRadius: 12,
+                paddingVertical: 15,
+                alignItems: 'center',
+                shadowColor: '#000',
+                shadowOffset: {width: 0, height: 2},
+                shadowOpacity: 0.3,
+                shadowRadius: 4,
+                elevation: 5, // Android shadow
               }}>
-              <TouchableOpacity style={{flex: 1, justifyContent: 'center'}}
-              onPress={() => {
-                navigation.navigate('MainApp');
-              }}>
-                <Text>next</Text>
-              </TouchableOpacity>
-            </View>
+              <Text style={{color: '#fff', fontSize: 18, fontWeight: 'bold'}}>
+                Next
+              </Text>
+            </TouchableOpacity>
 
             {/* Keyboard Avoiding View to handle keyboard appearance ends  here*/}
           </View>
