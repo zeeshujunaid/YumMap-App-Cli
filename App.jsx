@@ -1,15 +1,14 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import AppNavigator from './src/navigation/appnavigator';
-import { RestaurantContext } from './src/context/Resturantcontext';
-
+import { RestaurantProvider } from './src/context/Resturantcontext'; // ✅ Corrected
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <RestaurantContext>
+    <RestaurantProvider>
+      <NavigationContainer>
         <AppNavigator />
-      </RestaurantContext>
-    </NavigationContainer>
+      </NavigationContainer>
+    </RestaurantProvider>
   );
 }
