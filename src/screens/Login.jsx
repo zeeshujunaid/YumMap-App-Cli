@@ -11,11 +11,14 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export default function Login({navigation}) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   // Configure Google Sign-In
   useEffect(() => {
     GoogleSignin.configure({
@@ -61,6 +64,28 @@ export default function Login({navigation}) {
     }
   };
 
+  const handleLogin = () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please enter both email and password.');
+      return;
+    }
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        Alert.alert('Success', 'Logged in successfully!');
+        navigation.navigate('MainApp');
+        setEmail('');
+        setPassword('');
+      })
+      .catch(error => {
+        console.error('Login Error:', error);
+
+        Alert.alert('Login Error', 'Plz Signup If You Havent Already ');
+        setEmail('');
+        setPassword('');
+      });
+  };
+
   return (
     // Keyboard Avoiding View to handle keyboard appearance
     <KeyboardAvoidingView
@@ -84,9 +109,6 @@ export default function Login({navigation}) {
                 source={require('../../assets/YumMap.png')}
                 style={{height: 90, width: 80}}
               />
-              {/* <Text style={{fontSize: 24, fontWeight: 'bold', color: '#000'}}>
-                YumMap
-              </Text> */}
             </View>
 
             {/* Welcome Section */}
@@ -102,12 +124,12 @@ export default function Login({navigation}) {
               </Text>
               <Text
                 style={{
-                  fontSize: 16,
+                  fontSize: 12,
                   color: '#666',
                   textAlign: 'center',
                   marginTop: 5,
                 }}>
-                Login to your account
+                Login to your account as a restaurant or user
               </Text>
             </View>
 
@@ -116,6 +138,8 @@ export default function Login({navigation}) {
               {/* Email Input */}
               <Text style={{fontSize: 16, color: '#000'}}>Email</Text>
               <TextInput
+                value={email}
+                onChangeText={setEmail}
                 placeholder="Enter your email"
                 keyboardType="email-address"
                 style={{
@@ -131,6 +155,8 @@ export default function Login({navigation}) {
                 Password
               </Text>
               <TextInput
+                value={password}
+                onChangeText={setPassword}
                 placeholder="Enter your password"
                 secureTextEntry
                 style={{
@@ -142,15 +168,33 @@ export default function Login({navigation}) {
                 }}
               />
             </View>
-            {/* Forgot Password Link */}
-            <TouchableOpacity
-              style={{marginTop: 20, marginLeft: 220}}
-              onPress={() => navigation.navigate('ForgotPassword')}>
-              <Text style={{color: '#FF4D4D', textAlign: 'center'}}>
-                Forgot Password?
-              </Text>
-            </TouchableOpacity>
+            {/* {dont have account button , and forget password button} */}
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 90,
+                marginTop: 20,
+                width: '100%',
+                justifyContent: 'space-around',
+              }}>
+              <TouchableOpacity
+                style={{marginTop: 20}}
+                onPress={() => navigation.navigate('Signup')}>
+                <Text
+                  style={{color: '#FF4D4D', textAlign: 'center', fontSize: 12}}>
+                  Dont have an Account?
+                </Text>
+              </TouchableOpacity>
 
+              <TouchableOpacity
+                style={{marginTop: 20}}
+                onPress={() => navigation.navigate('')}>
+                <Text
+                  style={{color: '#4c9efa', textAlign: 'center', fontSize: 12}}>
+                  Forget Password
+                </Text>
+              </TouchableOpacity>
+            </View>
             {/* signup Button */}
             <TouchableOpacity
               style={{
@@ -159,9 +203,7 @@ export default function Login({navigation}) {
                 borderRadius: 10,
                 marginTop: 30,
               }}
-              onPress={() => {
-                navigation.navigate('Signup');
-              }}>
+              onPress={handleLogin}>
               <Text
                 style={{
                   color: '#fff',
