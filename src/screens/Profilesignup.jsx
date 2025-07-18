@@ -17,6 +17,9 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 export default function Profilesignup({navigation}) {
   const [selectedImage, setSelectedImage] = useState(null);
 
+
+  
+
   const handleImagePick = () => {
     Alert.alert(
       'Upload Image',

@@ -11,6 +11,7 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -18,6 +19,7 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 export default function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   // Configure Google Sign-In
   useEffect(() => {
@@ -69,6 +71,7 @@ export default function Login({navigation}) {
       Alert.alert('Error', 'Please enter both email and password.');
       return;
     }
+    setLoading(true);
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
@@ -76,10 +79,11 @@ export default function Login({navigation}) {
         navigation.navigate('MainApp');
         setEmail('');
         setPassword('');
+        setLoading(false);
       })
       .catch(error => {
         console.error('Login Error:', error);
-
+        setLoading(false);
         Alert.alert('Login Error', 'Plz Signup If You Havent Already ');
         setEmail('');
         setPassword('');
@@ -195,24 +199,33 @@ export default function Login({navigation}) {
                 </Text>
               </TouchableOpacity>
             </View>
-            {/* signup Button */}
+            {/* login Button */}
             <TouchableOpacity
               style={{
                 backgroundColor: '#FF4D4D',
                 paddingVertical: 14,
                 borderRadius: 10,
                 marginTop: 30,
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
               }}
-              onPress={handleLogin}>
-              <Text
-                style={{
-                  color: '#fff',
-                  textAlign: 'center',
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                }}>
-                Login
-              </Text>
+              onPress={handleLogin}
+              disabled={loading} // prevent multiple clicks while loading
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text
+                  style={{
+                    color: '#fff',
+                    textAlign: 'center',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}>
+                  Login
+                </Text>
+              )}
             </TouchableOpacity>
 
             <View

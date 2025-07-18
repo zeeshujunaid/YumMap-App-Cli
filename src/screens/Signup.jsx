@@ -11,11 +11,54 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export default function Login({navigation}) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignup = async () => {
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    try {
+      // Create user with email and password
+      const userCredential = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      const uid = userCredential.user.uid;
+
+      await firestore().collection('users').doc(uid).set({
+        email,
+      });
+
+      Alert.alert('Success', 'Account created successfully!');
+
+      navigation.navigate('Profilesignup');
+
+      setEmail('');
+      setPassword('');
+    } catch (error) {
+      console.log('Signup Error:', error);
+
+      if (error.code === 'auth/email-already-in-use') {
+        Alert.alert('Error', 'This email is already in use.');
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert('Error', 'The email address is not valid.');
+      } else if (error.code === 'auth/weak-password') {
+        Alert.alert('Error', 'The password is too weak.');
+      } else {
+        Alert.alert('Error', error.message);
+      }
+    }
+  };
+
   // Configure Google Sign-In
   useEffect(() => {
     GoogleSignin.configure({
@@ -93,6 +136,9 @@ export default function Login({navigation}) {
               {/* {email input} */}
               <Text style={{fontSize: 16, color: '#000'}}>Email</Text>
               <TextInput
+                value={email}
+                onChangeText={setEmail}
+                autoCapitalize="none"
                 placeholder="Enter your email"
                 keyboardType="email-address"
                 style={{
@@ -108,6 +154,9 @@ export default function Login({navigation}) {
                 Password
               </Text>
               <TextInput
+                value={password}
+                onChangeText={setPassword}
+                autoCapitalize="none"
                 placeholder="Enter your password"
                 secureTextEntry
                 style={{
@@ -149,24 +198,27 @@ export default function Login({navigation}) {
 
             {/* Login Button */}
             <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('Profilesignup');
-              }}
+              onPress={handleSignup}
+              disabled={loading}
               style={{
                 backgroundColor: '#FF4D4D',
                 paddingVertical: 14,
                 borderRadius: 10,
                 marginTop: 30,
               }}>
-              <Text
-                style={{
-                  color: '#fff',
-                  textAlign: 'center',
-                  fontSize: 18,
-                  fontWeight: 'bold',
-                }}>
-                Sign Up
-              </Text>
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text
+                  style={{
+                    color: '#fff',
+                    textAlign: 'center',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}>
+                  Sign Up
+                </Text>
+              )}
             </TouchableOpacity>
 
             <View
