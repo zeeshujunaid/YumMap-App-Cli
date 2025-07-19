@@ -14,12 +14,14 @@ import {
 import {ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
+import Forgetpassword from '../components/forgetpassword';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 export default function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showForgotModal, setShowForgotModal] = useState(false);
 
   // Configure Google Sign-In
   useEffect(() => {
@@ -192,7 +194,7 @@ export default function Login({navigation}) {
 
               <TouchableOpacity
                 style={{marginTop: 20}}
-                onPress={() => navigation.navigate('')}>
+                onPress={() => setShowForgotModal(true)}>
                 <Text
                   style={{color: '#4c9efa', textAlign: 'center', fontSize: 12}}>
                   Forget Password
@@ -265,6 +267,8 @@ export default function Login({navigation}) {
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
+      <Forgetpassword visible={showForgotModal} onClose={() => setShowForgotModal(false)} />
     </KeyboardAvoidingView>
+
   );
 }
