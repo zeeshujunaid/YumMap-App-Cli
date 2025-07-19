@@ -12,13 +12,16 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export default function Profilesignup({navigation}) {
   const [selectedImage, setSelectedImage] = useState(null);
-
-
-  
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleImagePick = () => {
     Alert.alert(
@@ -49,6 +52,68 @@ export default function Profilesignup({navigation}) {
       ],
       {cancelable: true},
     );
+  };
+
+  const uploadToCloudinary = async imageUri => {
+    const data = new FormData();
+    data.append('file', {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'profile.jpg',
+    });
+    data.append('upload_preset', 'YumMapPics'); // your Cloudinary preset
+    data.append('cloud_name', 'dudx3of1n'); // your Cloudinary cloud name
+
+    const res = await fetch(
+      'https://api.cloudinary.com/v1_1/dudx3of1n/image/upload',
+      {
+        method: 'POST',
+        body: data,
+      },
+    );
+
+    const file = await res.json();
+    return file.secure_url;
+  };
+
+  const Setprofile = async () => {
+    if (!name || !phone) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+    setLoading(true);
+    try {
+      const currentUser = auth().currentUser;
+      if (!currentUser) {
+        Alert.alert('Error', 'No user is currently logged in.');
+        return;
+      }
+
+      const uid = currentUser.uid;
+
+      // 2. Upload image to Cloudinary
+      let imageUrl = '';
+      if (selectedImage) {
+        imageUrl = await uploadToCloudinary(selectedImage);
+      }
+
+      // 3. Save user data to Firestore
+      await firestore().collection('users').doc(uid).update({
+        name,
+        phone,
+        ProfileImage: imageUrl,
+      });
+
+      setLoading(false);
+
+      Alert.alert('Success', 'Profile updated successfully!');
+      navigation.navigate('MainApp'); // Navigate to the main app screen
+    } catch (error) {
+      setLoading(false);
+      console.error('Error uploading image:', error);
+      Alert.alert('Error', 'Failed to upload image. Please try again.');
+      return;
+    }
   };
 
   return (
@@ -136,6 +201,9 @@ export default function Profilesignup({navigation}) {
                   Full Name
                 </Text>
                 <TextInput
+                  value={name}
+                  onChangeText={setName}
+                  autoCapitalize="none"
                   placeholder="John"
                   keyboardType="default"
                   style={{
@@ -153,6 +221,8 @@ export default function Profilesignup({navigation}) {
                   Enter Your Phone Number
                 </Text>
                 <TextInput
+                  value={phone}
+                  onChangeText={setPhone}
                   placeholder="+1234567890"
                   keyboardType="phone-pad"
                   style={{
@@ -168,9 +238,11 @@ export default function Profilesignup({navigation}) {
               </View>
 
               {/* Next Button */}
-              <View style={{width: '100%', paddingHorizontal: 20,marginTop: 20}}>
+              <View
+                style={{width: '100%', paddingHorizontal: 20, marginTop: 20}}>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('MainApp')}
+                  onPress={Setprofile}
+                  disabled={loading}
                   activeOpacity={0.8}
                   style={{
                     backgroundColor: '#FF4D4D',
@@ -183,10 +255,19 @@ export default function Profilesignup({navigation}) {
                     shadowRadius: 3,
                     elevation: 4,
                   }}>
-                  <Text
-                    style={{color: '#fff', fontSize: 18, fontWeight: 'bold'}}>
-                    Next
-                  </Text>
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text
+                      style={{
+                        color: '#fff',
+                        textAlign: 'center',
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                      }}>
+                      Done
+                    </Text>
+                  )}
                 </TouchableOpacity>
               </View>
             </View>

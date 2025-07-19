@@ -11,6 +11,7 @@ import {
   Keyboard,
   Alert,
 } from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -19,6 +20,8 @@ import {GoogleSignin} from '@react-native-google-signin/google-signin';
 export default function Login({navigation}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+  
 
   const handleSignup = async () => {
     if (!email || !password) {
@@ -26,6 +29,7 @@ export default function Login({navigation}) {
       return;
     }
 
+    setLoading(true);
     try {
       // Create user with email and password
       const userCredential = await auth().createUserWithEmailAndPassword(
@@ -37,14 +41,17 @@ export default function Login({navigation}) {
       await firestore().collection('users').doc(uid).set({
         email,
       });
+      setLoading(false);
 
       Alert.alert('Success', 'Account created successfully!');
 
       navigation.navigate('Profilesignup');
 
+      // Clear input fields
       setEmail('');
       setPassword('');
     } catch (error) {
+      setLoading(false);
       console.log('Signup Error:', error);
 
       if (error.code === 'auth/email-already-in-use') {
