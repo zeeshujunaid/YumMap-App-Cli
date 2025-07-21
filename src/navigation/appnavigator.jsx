@@ -7,15 +7,13 @@ import DrawerNavigator from './drawernavigator';
 import Loader from '../screens/Loader';
 import Profilesignup from '../screens/Profilesignup'; 
 import Resturantsignup from '../screens/Resturantsignup';
-// import { AuthContext } from '../context/Authcontext';
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigator = () => {
-//   const { user } = useContext(AuthContext);
 
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='Loader'>
+    <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName='RestaurantSignup'>
         <Stack.Screen name="Loader" component={Loader} />
           <Stack.Screen name="MainApp" component={DrawerNavigator} />
           <Stack.Screen name="Login" component={LoginScreen} />
