@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Platform,
+  Switch,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -19,6 +20,7 @@ export default function RestaurantTimingModal({ visible, onClose, onSave }) {
     daysOfWeek.map(day => ({
       day,
       isOpen: false,
+      is24Hours: false,
       from: '',
       to: '',
     }))
@@ -37,19 +39,41 @@ export default function RestaurantTimingModal({ visible, onClose, onSave }) {
     }
 
     const date = selectedDate || new Date();
-    const time = `${date.getHours().toString().padStart(2, '0')}:${date
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}`;
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const formatted =
+      Platform.OS === 'ios'
+        ? date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        : `${(hour % 12 || 12)
+            .toString()
+            .padStart(2, '0')}:${minute.toString().padStart(2, '0')} ${
+            hour >= 12 ? 'PM' : 'AM'
+          }`;
 
     const updated = [...timings];
-    updated[showTimePicker.index][showTimePicker.type] = time;
+    updated[showTimePicker.index][showTimePicker.type] = formatted;
     setTimings(updated);
     setShowTimePicker({ show: false, index: null, type: null });
   };
 
   const handleSave = () => {
-    // onSave(timings);
+    const formatted = {};
+
+    timings.forEach(item => {
+      formatted[item.day] = item.isOpen
+        ? item.is24Hours
+          ? { from: '00:00', to: '23:59' }
+          : {
+              from: item.from || '00:00',
+              to: item.to || '00:00',
+            }
+        : {
+            from: 'Closed',
+            to: 'Closed',
+          };
+    });
+
+    onSave(formatted);
     onClose();
   };
 
@@ -73,7 +97,7 @@ export default function RestaurantTimingModal({ visible, onClose, onSave }) {
               padding: 20,
               borderRadius: 12,
               width: '90%',
-              maxHeight: '80%',
+              maxHeight: '85%',
             }}>
             <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>
               Select Opening Times
@@ -81,66 +105,92 @@ export default function RestaurantTimingModal({ visible, onClose, onSave }) {
 
             <ScrollView>
               {timings.map((item, index) => (
-                <View key={index} style={{ marginBottom: 15 }}>
-                  <Text style={{ fontWeight: 'bold' }}>{item.day}</Text>
+                <View
+                  key={index}
+                  style={{
+                    marginBottom: 15,
+                    borderBottomWidth: 1,
+                    borderBottomColor: '#eee',
+                    paddingBottom: 10,
+                  }}>
+                  <Text style={{ fontWeight: 'bold', marginBottom: 4 }}>{item.day}</Text>
 
-                  <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: item.isOpen ? '#4caf50' : '#ccc',
-                        padding: 6,
-                        borderRadius: 6,
-                        marginRight: 10,
-                      }}
-                      onPress={() => {
+                  <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                    <Text style={{ marginRight: 10 }}>Open:</Text>
+                    <Switch
+                      value={item.isOpen}
+                      onValueChange={value => {
                         const updated = [...timings];
-                        updated[index].isOpen = !updated[index].isOpen;
+                        updated[index].isOpen = value;
                         setTimings(updated);
-                      }}>
-                      <Text style={{ color: '#fff' }}>
-                        {item.isOpen ? 'Open' : 'Closed'}
-                      </Text>
-                    </TouchableOpacity>
-
-                    {item.isOpen && (
-                      <>
-                        <TouchableOpacity
-                          onPress={() =>
-                            setShowTimePicker({ show: true, index, type: 'from' })
-                          }
-                          style={{
-                            borderWidth: 1,
-                            borderColor: '#ccc',
-                            borderRadius: 6,
-                            padding: 6,
-                            marginRight: 10,
-                          }}>
-                          <Text>{item.from || 'From'}</Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          onPress={() =>
-                            setShowTimePicker({ show: true, index, type: 'to' })
-                          }
-                          style={{
-                            borderWidth: 1,
-                            borderColor: '#ccc',
-                            borderRadius: 6,
-                            padding: 6,
-                          }}>
-                          <Text>{item.to || 'To'}</Text>
-                        </TouchableOpacity>
-                      </>
-                    )}
+                      }}
+                    />
                   </View>
+
+                  {item.isOpen && (
+                    <>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                        <Text style={{ marginRight: 10 }}>24 Hours:</Text>
+                        <Switch
+                          value={item.is24Hours}
+                          onValueChange={value => {
+                            const updated = [...timings];
+                            updated[index].is24Hours = value;
+                            if (value) {
+                              updated[index].from = '00:00';
+                              updated[index].to = '23:59';
+                            } else {
+                              updated[index].from = '';
+                              updated[index].to = '';
+                            }
+                            setTimings(updated);
+                          }}
+                        />
+                      </View>
+
+                      {!item.is24Hours && (
+                        <View style={{ flexDirection: 'row', gap: 10 }}>
+                          <TouchableOpacity
+                            onPress={() =>
+                              setShowTimePicker({ show: true, index, type: 'from' })
+                            }
+                            style={{
+                              flex: 1,
+                              borderWidth: 1,
+                              borderColor: '#ccc',
+                              borderRadius: 6,
+                              padding: 10,
+                              alignItems: 'center',
+                            }}>
+                            <Text>{item.from || 'From'}</Text>
+                          </TouchableOpacity>
+
+                          <TouchableOpacity
+                            onPress={() =>
+                              setShowTimePicker({ show: true, index, type: 'to' })
+                            }
+                            style={{
+                              flex: 1,
+                              borderWidth: 1,
+                              borderColor: '#ccc',
+                              borderRadius: 6,
+                              padding: 10,
+                              alignItems: 'center',
+                            }}>
+                            <Text>{item.to || 'To'}</Text>
+                          </TouchableOpacity>
+                        </View>
+                      )}
+                    </>
+                  )}
                 </View>
               ))}
             </ScrollView>
 
             <TouchableOpacity
               style={{
-                backgroundColor: '#e53935',
-                padding: 10,
+                backgroundColor: '#FF4D4D',
+                padding: 12,
                 marginTop: 10,
                 borderRadius: 8,
               }}
@@ -150,6 +200,7 @@ export default function RestaurantTimingModal({ visible, onClose, onSave }) {
                   color: '#fff',
                   fontWeight: 'bold',
                   textAlign: 'center',
+                  fontSize: 16,
                 }}>
                 Save & Close
               </Text>
@@ -163,6 +214,7 @@ export default function RestaurantTimingModal({ visible, onClose, onSave }) {
           value={new Date()}
           mode="time"
           display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+          is24Hour={false} // ✅ This enables AM/PM mode
           onChange={handleTimeChange}
         />
       )}

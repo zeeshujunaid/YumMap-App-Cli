@@ -15,12 +15,20 @@ import {
   Button,
 } from 'react-native';
 import {useState} from 'react';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import RestaurantTimingModal from '../components/Timeselecter';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export default function Resturantsignup({navigation}) {
+  const [restaurantTimings, setRestaurantTimings] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [phone, setPhone] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleImagePick = () => {
     Alert.alert(
@@ -53,6 +61,73 @@ export default function Resturantsignup({navigation}) {
     );
   };
 
+  const uploadToCloudinary = async imageUri => {
+    const data = new FormData();
+    data.append('file', {
+      uri: imageUri,
+      type: 'image/jpeg',
+      name: 'profile.jpg',
+    });
+    data.append('upload_preset', 'YumMapPics'); // your Cloudinary preset
+    data.append('cloud_name', 'dudx3of1n'); // your Cloudinary cloud name
+
+    const res = await fetch(
+      'https://api.cloudinary.com/v1_1/dudx3of1n/image/upload',
+      {
+        method: 'POST',
+        body: data,
+      },
+    );
+
+    const file = await res.json();
+    return file.secure_url;
+  };
+
+  const handleRestaurantSignup = async () => {
+    if (!name || !email || !password || !phone || !restaurantTimings || !selectedImage) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      // Upload image to Cloudinary
+      const imageUrl = selectedImage
+        ? await uploadToCloudinary(selectedImage)
+        : null;
+
+      // Create user with email and password
+      const userCredential = await auth().createUserWithEmailAndPassword(
+        email,
+        password,
+      );
+      const uid = userCredential.user.uid;
+
+      await firestore().collection('Resturantdata').doc(uid).set({
+        name,
+        email,
+        phone,
+        timings: restaurantTimings,
+        imageUrl,
+      });
+
+      setLoading(false);
+      Alert.alert('Success', 'Restaurant account created successfully!');
+      navigation.navigate('MainApp');
+
+      // Clear input fields
+      setName('');
+      setEmail('');
+      setPassword('');
+      setPhone('');
+      setSelectedImage(null);
+    } catch (error) {
+      setLoading(false);
+      console.log('Signup Error:', error);
+      Alert.alert('Error', error.message);
+    }
+  }
+
   return (
     // {/* Keyboard Avoiding View to handle keyboard appearance */}
     <KeyboardAvoidingView
@@ -82,36 +157,36 @@ export default function Resturantsignup({navigation}) {
                   width: '100%',
                 }}
               />
+
+              {!selectedImage && (
+                <View
+                  style={{
+                    backgroundColor: 'rgba(245, 241, 241, 0.5)',
+                    padding: 20,
+                    borderRadius: 10,
+                    width: '90%',
+                    height: 70,
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    position: 'absolute',
+                    top: 20,
+                    left: 20,
+                    right: 20,
+                  }}>
+                  <Text
+                    style={{
+                      color: '#000',
+                      fontSize: 16,
+                      fontWeight: 'bold',
+                      textAlign: 'center',
+                    }}>
+                    Add Your Restaurant Image
+                  </Text>
+                </View>
+              )}
             </View>
 
             {/* Logo Section ends here*/}
-
-            {/* text with overlay */}
-            <View
-              style={{
-                backgroundColor: 'rgba(245, 241, 241, 0.5)',
-                padding: 20,
-                borderRadius: 10,
-                width: '90%',
-                height: 70,
-                justifyContent: 'center',
-                alignSelf: 'center',
-                position: 'absolute',
-                top: 20,
-                left: 20,
-                right: 20,
-              }}>
-              <Text
-                style={{
-                  color: '#000',
-                  fontSize: 16,
-                  fontWeight: 'bold',
-                  textAlign: 'center',
-                }}>
-                Add Your Restaurant Image
-              </Text>
-            </View>
-            {/* text with overlay ends here */}
 
             {/* image picker overlay */}
 
@@ -174,6 +249,8 @@ export default function Resturantsignup({navigation}) {
                 Restaurant Name
               </Text>
               <TextInput
+                value={name}
+                onChangeText={setName}
                 placeholder="YumMap burgers and fries"
                 keyboardType="default"
                 style={{
@@ -190,6 +267,9 @@ export default function Resturantsignup({navigation}) {
                 Enter Restaurant Email{' '}
               </Text>
               <TextInput
+
+                value={email}
+                onChangeText={setEmail}
                 placeholder="YumMap@gmail.com"
                 keyboardType="default"
                 style={{
@@ -207,8 +287,12 @@ export default function Resturantsignup({navigation}) {
                 Create a password
               </Text>
               <TextInput
+
+                value={password}
+                onChangeText={setPassword}
                 placeholder="********"
-                keyboardType="default"
+                keyboardType="password"
+                secureTextEntry={true}
                 style={{
                   borderWidth: 1,
                   borderColor: '#ccc',
@@ -220,27 +304,14 @@ export default function Resturantsignup({navigation}) {
                 }}
               />
 
-              <Text style={{fontSize: 16, color: '#000', marginTop: 20}}>
-                Enter Restaurant Address{' '}
-              </Text>
-              <TextInput
-                placeholder="123 YumMap Street, Food City"
-                keyboardType="default"
-                style={{
-                  borderWidth: 1,
-                  borderColor: '#ccc',
-                  borderRadius: 10,
-                  padding: 12,
-                  fontSize: 16,
-                  width: '100%',
-                  marginTop: 10,
-                }}
-              />
 
               <Text style={{fontSize: 16, color: '#000', marginTop: 20}}>
                 Enter Restaurant PhoneNumber{' '}
               </Text>
               <TextInput
+
+                value={phone}
+                onChangeText={setPhone}
                 placeholder="+1234567890"
                 keyboardType="phone-pad"
                 style={{
@@ -293,12 +364,16 @@ export default function Resturantsignup({navigation}) {
               <RestaurantTimingModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
+                onSave={timings => {
+                  setRestaurantTimings(timings);
+                  setModalVisible(false);
+                }}
               />
 
               {/*input fields ends here */}
             </View>
             <TouchableOpacity
-              onPress={() => navigation.navigate('MainApp')}
+              onPress={handleRestaurantSignup}
               style={{
                 marginTop: 30,
                 marginHorizontal: 20,
