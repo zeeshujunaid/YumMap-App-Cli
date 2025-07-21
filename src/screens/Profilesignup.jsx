@@ -151,14 +151,12 @@ export default function Profilesignup({navigation}) {
                   source={
                     selectedImage
                       ? {uri: selectedImage}
-                      : require('../../assets/resturantbg.jpg')
+                      : require('../../assets/profileicon.png')
                   }
                   style={{
                     height: 150,
                     width: 150,
                     borderRadius: 75,
-                    borderColor: '#FF4D4D',
-                    borderWidth: 2,
                   }}
                 />
               </View>
